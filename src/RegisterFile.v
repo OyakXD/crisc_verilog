@@ -9,7 +9,7 @@ module RegisterFile #(parameter N=8) (
     output [N-1:0] o_Read_Destiny
 );
 
-    reg [N-1:0] r_Registers [0:N-1];
+    reg [N-1:0] r_Registers [0:3];
     integer i;
 
     always @(posedge i_Clk or posedge i_Rst) begin

@@ -8,15 +8,14 @@ module tb_Datapath;
     reg clk;
     reg rst;
     reg [N-1:0] instruction;
-    reg [N-1:0] ram_data;
     wire [N-1:0] result;
     wire [N-1:0] ram_addr;
+    integer i;
 
     Datapath #(.N(N)) dut (
         .i_Clk(clk),
         .i_Rst(rst),
         .i_Instruction(instruction),
-        .i_RAM_Data(ram_data),
         .o_RAM_Addr(ram_addr),
         .o_Result(result)
     );
@@ -30,7 +29,6 @@ module tb_Datapath;
         clk = 0;
         rst = 1;
         instruction = 8'b0;
-        ram_data = 8'b0;
 
         #10 rst = 0;
 
@@ -70,8 +68,35 @@ module tb_Datapath;
         // SUB R1, R0
         instruction = 8'b00110001;
         #10;
-
         $display("RESULTADO DA SUBTRAÇÃO EM R1: %d", dut.reg_file.r_Registers[1]);
+
+        // STR R3, R1
+        instruction = 8'b10101101;
+        #10
+
+        #100
+        $display("MEMORIA RAM COM O VALOR ENCONTRADO:");
+        for(i = 0; i < 256; i = i + 1) begin
+            if(dut.ram.r_Contents[i] !== 8'dx && dut.ram.r_Contents[i] !== 0) begin
+                $display("Endereço [%d] = %d", i, dut.ram.r_Contents[i]);
+            end
+        end
+
+        $display("MEMORIA RAM COMPLETA:");
+        for(i = 0; i < 256; i = i + 1) begin
+            $display("Endereço [%d] = %d", i, dut.ram.r_Contents[i]);
+        end
+        #10
+
+        // LDR R1, R3
+        instruction = 8'b10011101;
+        #10
+
+        $display("VALOR LIDO DA MEMORIA RAM GUARDADA EM R1 = %d", dut.reg_file.r_Registers[1]);
+
+        
+
+        
 
         $finish;
     end

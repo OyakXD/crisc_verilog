@@ -97,7 +97,24 @@ module Control #(parameter N=8) (
                 o_Ula_op = 4'b0011;
                 o_Mux_Sel = 2'b01;
             end
+            
+            // LDR
+            8'b1001????: begin
+                o_Reg_WE = 1;
+                o_Mem_WE = 0;
+                o_Ula_op = 4'b0001;
+                o_Mux_Sel = 2'b10;
+            end
 
+            // STR
+            8'b1010????: begin
+                o_Reg_WE = 0;
+                o_Mem_WE = 1;
+                o_Ula_op = 4'b0001;
+                o_Mux_Sel = 2'b01;
+            end
+
+            // LI
             8'b11??????: begin
                 o_Reg_WE = 1;
                 o_Mux_Sel = 2'b00;

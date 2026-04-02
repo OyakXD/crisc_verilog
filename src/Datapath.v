@@ -2,7 +2,6 @@ module Datapath #(parameter N=8) (
     input i_Clk,
     input i_Rst,
     input [N-1:0] i_Instruction,
-    input [N-1:0] i_RAM_Data,
     output [N-1:0] o_Result,
     output [N-1:0] o_RAM_Addr
 );
@@ -13,13 +12,22 @@ module Datapath #(parameter N=8) (
     wire [3:0] w_Ula_op;
     wire w_Branch_Eq, w_Branch_NEq, w_Branch_BEq;
     wire [1:0] w_Mux_Sel;
+    wire w_Mem_WE;
 
     // Sinais de dados
     wire [N-1:0] w_Data_RS;
     wire [N-1:0] w_Data_RD;
     wire [N-1:0] w_Ula_Result;
     wire [N-1:0] w_Mux_Out;
+    wire [N-1:0] i_RAM_Data;
     wire w_Zero_Flag;
+
+    wire [N-1:0] w_RAM_IO_Data;
+
+    // Se o sinal o sinal de escrita = 1 o datapath
+    // coloca o valor do registrador RD no barramento
+    // caso contrário, solta o fio (8'bz) para a ram poder falar.
+    assign w_RAM_IO_Data = (w_Mem_WE) ? w_Data_RD : {N{1'bz}};
 
     wire [N-1:0] w_Immediate = {4'b0000, i_Instruction[5:2]};
 
@@ -28,6 +36,7 @@ module Datapath #(parameter N=8) (
         .o_Reg_WE(w_Reg_WE),
         .o_Ula_op(w_Ula_op),
         .o_Mux_Sel(w_Mux_Sel),
+        .o_Mem_WE(w_Mem_WE),
         .o_Branch_Eq(w_Branch_Eq),
         .o_Branch_BEq(w_Branch_BEq),
         .o_Branch_NEq(w_Branch_NEq)
@@ -60,8 +69,17 @@ module Datapath #(parameter N=8) (
         .o_Result(w_Ula_Result)
     );
 
+    Memory ram (
+        .i_Clk(i_Clk),
+        .i_Enable(1'b1),
+        .i_Write_Enable(w_Mem_WE),
+        .i_Address(w_Ula_Result),
+        .io_Data(w_RAM_IO_Data)
+    );
+
+    assign i_RAM_Data = w_RAM_IO_Data;
     assign o_Result = w_Ula_Result;
-    assign o_RAM_Addr = w_Data_RS;
+    assign o_RAM_Addr = w_Ula_Result;
 
     
 endmodule

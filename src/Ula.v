@@ -16,6 +16,7 @@ module Ula #(parameter N=8) (
             4'b0110: o_Result = (i_Op_1 << i_Op_2);
             4'b0111: o_Result = (i_Op_1 >> i_Op_2);
             4'b1000: o_Result = (~i_Op_1);
+            4'b1011: o_Result = (i_Op_1 - i_Op_2);
         default: o_Result = {N{1'b0}};
         endcase
     end

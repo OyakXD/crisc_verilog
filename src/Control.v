@@ -12,15 +12,17 @@ module Control #(parameter N=8) (
 
     always @(*) begin
 
-        // Evitar latches
+        // Evitar latches e HALT
         o_Ula_op = 4'b0000;
         o_Reg_WE = 0;
         o_Branch_BEq = 0;
         o_Branch_NEq = 0;
         o_Branch_Eq = 0;
         o_Mux_Sel = 2'b00;
+        o_Mem_WE = 0;
 
         casez (i_Instruction)
+
             // MOV
             8'b0001????: begin
                 o_Reg_WE = 1;
@@ -80,22 +82,19 @@ module Control #(parameter N=8) (
             // B
             8'b100001??: begin
                 o_Branch_Eq = 1;
-                o_Ula_op = 4'b0011;
-                o_Mux_Sel = 2'b01;
+                o_Ula_op = 4'b0001;
             end
 
             // BEQ
             8'b100010??: begin
                 o_Branch_BEq = 1;
                 o_Ula_op = 4'b0011;
-                o_Mux_Sel = 2'b01;
             end
 
             // BNE  
             8'b100011??: begin
                 o_Branch_NEq = 1;
                 o_Ula_op = 4'b0011;
-                o_Mux_Sel = 2'b01;
             end
             
             // LDR

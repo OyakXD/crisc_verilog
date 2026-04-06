@@ -12,6 +12,13 @@ module Memory #(parameter N = 8) (
     // se não ele fica em alta impedância ('z') para não dar conflito.
     assign io_Data = (i_Enable && !i_Write_Enable) ? r_Contents[i_Address] : {N{1'bz}};
 
+    integer k;
+    initial begin
+        for(k = 0; k < (2**N) ; k = k + 1) begin
+            r_Contents[k] = 8'b0;
+        end
+    end
+
     always @(posedge i_Clk) begin
         if(i_Enable && i_Write_Enable) begin
             r_Contents[i_Address] <= io_Data;

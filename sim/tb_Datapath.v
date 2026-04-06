@@ -15,6 +15,7 @@ module tb_Datapath;
     Datapath #(.N(N)) dut (
         .i_Clk(clk),
         .i_Rst(rst),
+        .i_Instruction(instruction),
         .o_RAM_Addr(ram_addr),
         .o_Result(result)
     );
@@ -27,13 +28,9 @@ module tb_Datapath;
         // -- inicialização ---
         clk = 0;
         rst = 1;
-        //instruction = 8'b0;
+        instruction = 8'b0;
 
-        #15 rst = 0;
-
-        #500;
-
-        /*
+        #10 rst = 0;
 
         // LI R1, #7
         instruction = 8'b11011101;
@@ -61,8 +58,8 @@ module tb_Datapath;
         instruction = 8'b11010100;
         #10;
 
-        // LI R1, #5
-        instruction = 8'b11010101;
+        // LI R1, #10
+        instruction = 8'b11101001;
         #10;
 
         $display("Conteúdo de R0: %d", dut.reg_file.r_Registers[0]);
@@ -72,10 +69,6 @@ module tb_Datapath;
         instruction = 8'b00110001;
         #10;
         $display("RESULTADO DA SUBTRAÇÃO EM R1: %d", dut.reg_file.r_Registers[1]);
-
-        // B R3
-        instruction = 8'b10000111;
-        #10;
 
         // STR R3, R1
         instruction = 8'b10101101;
@@ -100,7 +93,11 @@ module tb_Datapath;
         #10
 
         $display("VALOR LIDO DA MEMORIA RAM GUARDADA EM R1 = %d", dut.reg_file.r_Registers[1]);
-        */
+
+        
+
+        
+
         $finish;
     end
 endmodule

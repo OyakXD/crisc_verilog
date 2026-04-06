@@ -14,7 +14,7 @@ module RegisterFile #(parameter N=8) (
 
     always @(posedge i_Clk or posedge i_Rst) begin
         if (i_Rst) begin
-            for(i = 0; i < N; i = i + 1) begin
+            for(i = 0; i < 4; i = i + 1) begin
                 r_Registers[i] <= {N{1'b0}};
             end
         end else if (i_Write_Enable) begin

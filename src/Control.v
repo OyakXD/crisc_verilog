@@ -1,13 +1,13 @@
 module Control #(parameter N=8) (
     input [N-1:0] i_Instruction,
     output reg o_Reg_WE,
-    output reg o_Reg_Dst,
     output reg [3:0] o_Ula_op,
     output reg o_Mem_WE,
     output reg o_Branch_Eq,
     output reg o_Branch_NEq,
     output reg o_Branch_BEq,
-    output reg [1:0] o_Mux_Sel
+    output reg [1:0] o_Mux_Sel,
+    output reg o_Halt
 );
 
     always @(*) begin
@@ -20,8 +20,14 @@ module Control #(parameter N=8) (
         o_Branch_Eq = 0;
         o_Mux_Sel = 2'b00;
         o_Mem_WE = 0;
+        o_Halt = 0;
+
 
         casez (i_Instruction)
+
+            8'b00000000: begin
+                o_Halt = 1;
+            end
 
             // MOV
             8'b0001????: begin
